@@ -64,7 +64,7 @@ private:
 	UCameraComponent* Camera;
 
 	UPROPERTY(EditAnywhere)
-	float Range = 2000.0f;
+	float Range = 7000.0f;
 
 	UPROPERTY(VisibleAnywhere)
 	float LastShootTime = 0.0f;
