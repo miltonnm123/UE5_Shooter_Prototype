@@ -27,6 +27,13 @@ public:
 	int CurrentAmmo = 30;
 	int MaxAmmo = 30;
 
+	float WeaponRange = 10000.0f;
+	
+	float RisePerShot = 0.05f;
+	float Heat = 0.0f;
+	float DecayRate = 5.5f;
+	float HalfAngle = FMath::DegreesToRadians(0.5f);
+
 	void SetAmmo(int NewAmmo);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")

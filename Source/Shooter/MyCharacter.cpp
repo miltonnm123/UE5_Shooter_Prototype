@@ -42,6 +42,8 @@ void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	Heat = FMath::Max(0.0f, Heat - DecayRate * DeltaTime);
+
 }
 
 // Called to bind functionality to input
@@ -59,10 +61,7 @@ void AMyCharacter::PlayerShoot()
 		return;
 	}
 
-	FHitResult HitResult;
 
-	FVector start = Camera->GetComponentLocation();
-	FVector end = start + (Camera->GetForwardVector() * Range);
 
 	float CurrentTime = GetWorld()->GetTimeSeconds();
 
@@ -70,6 +69,26 @@ void AMyCharacter::PlayerShoot()
 
 	if (CurrentTime - LastShootTime >= FireRate)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Heat before coming shot: %f"), Heat);
+
+		float HorizontalScatter = FMath::FRandRange(-HalfAngle, HalfAngle) * Heat;
+
+		float VerticalClimb = Heat * RisePerShot;
+
+		FVector Forward = Camera->GetForwardVector();
+		FVector Right = Camera->GetRightVector();
+		FVector Up = FVector::CrossProduct(Forward, Right);
+
+		FVector SpreadDir = Forward + Right * FMath::Sin(HorizontalScatter) + Up * VerticalClimb;
+
+		SpreadDir.Normalize();
+
+
+		FVector start = Camera->GetComponentLocation();
+		FVector end = start + SpreadDir * WeaponRange;
+
+		FHitResult HitResult;
+
 		FVector Location = Camera->GetComponentLocation();
 
 		float Pitch = FMath::FRandRange(0.95f, 1.05f);
@@ -86,7 +105,7 @@ void AMyCharacter::PlayerShoot()
 
 		GetWorld()->LineTraceSingleByChannel(HitResult, start, end, ECC_Visibility);
 
-		DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 1.0f);
+		DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 10.0f);
 
 		if (HitResult.bBlockingHit)
 		{
@@ -102,6 +121,7 @@ void AMyCharacter::PlayerShoot()
 
 		LastShootTime = CurrentTime;
 		CurrentAmmo--;
+		Heat++;
 	}
 
 	
