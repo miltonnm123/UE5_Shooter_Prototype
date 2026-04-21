@@ -19,6 +19,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	int32 SpawnCount = 3;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	int32 CurrentDifficulty = 2;
+
+	int32 EasyDifficulty = 1;
+	int32 MediumDifficulty = 2;
+	int32 HardDifficulty = 3;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -30,6 +37,6 @@ protected:
 	TArray<AActor*> SpawnPoints;
 
 	UFUNCTION(BlueprintCallable, Category = "Spawning")
-	void SpawnAllEnemies();
+	void SpawnAllEnemies(int32 Difficulty);
 
 };

@@ -15,16 +15,26 @@ AEnemySpawner::AEnemySpawner()
 void AEnemySpawner::BeginPlay()
 {
 	Super::BeginPlay();
-	SpawnAllEnemies();
+	SpawnAllEnemies(CurrentDifficulty);
 	
 }
 
-void AEnemySpawner::SpawnAllEnemies()
+void AEnemySpawner::SpawnAllEnemies(int32 Difficulty)
 {
 	if (!EnemyClass)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("EnemySpawner: No EnemyClass set"));
 		return;
+	}
+
+	if (Difficulty == HardDifficulty)
+	{
+		SpawnCount *= 2;
+	}
+
+	if (Difficulty == MediumDifficulty)
+	{
+		SpawnCount *= 1.5f;
 	}
 
 	FActorSpawnParameters SpawnParams;
