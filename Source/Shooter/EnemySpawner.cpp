@@ -7,7 +7,7 @@
 AEnemySpawner::AEnemySpawner()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 }
 
@@ -15,16 +15,45 @@ AEnemySpawner::AEnemySpawner()
 void AEnemySpawner::BeginPlay()
 {
 	Super::BeginPlay();
-
-	TArray<AActor*> FoundActors;
-	//UGameplayStatics::GetAllActorsOfClass(GetWorld(), SpawnPoint::StaticClass(), FoundActors);
+	SpawnAllEnemies();
 	
 }
 
-// Called every frame
-void AEnemySpawner::Tick(float DeltaTime)
+void AEnemySpawner::SpawnAllEnemies()
 {
-	Super::Tick(DeltaTime);
+	if (!EnemyClass)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("EnemySpawner: No EnemyClass set"));
+		return;
+	}
 
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	TArray<AActor*> AvailablePoints = SpawnPoints;
+	for (int32 i = AvailablePoints.Num() - 1; i > 0; i--)
+	{
+		int32 j = FMath::RandRange(0, i);
+		AvailablePoints.Swap(i, j);
+	}
+
+	int32 ActualSpawnCount = FMath::Min(SpawnCount, AvailablePoints.Num());
+
+	for (int32 i = 0; i < ActualSpawnCount; i++)
+	{
+		AActor* SpawnPoint = AvailablePoints[i];
+
+		if (!IsValid(SpawnPoint)) continue;
+
+		FVector Location = SpawnPoint->GetActorLocation();
+		FRotator Rotation = SpawnPoint->GetActorRotation();
+
+		AActor* SpawnedEnemy = GetWorld()->SpawnActor<AActor>(EnemyClass, Location, Rotation, SpawnParams);
+
+		if (SpawnedEnemy)
+		{
+			UE_LOG(LogTemp, Log, TEXT("Spawned enemy at %s"), *Location.ToString());
+		}
+	}
 }
 

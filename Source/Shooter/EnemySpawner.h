@@ -16,12 +16,20 @@ public:
 	// Sets default values for this actor's properties
 	AEnemySpawner();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	int32 SpawnCount = 3;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	TSubclassOf<AActor> EnemyClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	TArray<AActor*> SpawnPoints;
+
+	UFUNCTION(BlueprintCallable, Category = "Spawning")
+	void SpawnAllEnemies();
 
 };
