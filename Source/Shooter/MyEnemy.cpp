@@ -2,9 +2,11 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h" 
 #include "Kismet/GameplayStatics.h"
-#include "GameFramework/Character.h"
+#include "MyGameInstance.h"
 #include "MyCharacter.h"
 #include "MyGameMode.h"
+#include "GameFramework/Character.h"
+
 
 AMyEnemy::AMyEnemy()
 {
@@ -21,6 +23,11 @@ void AMyEnemy::BeginPlay()
 	Super::BeginPlay();
 	CurrentHealth = MaxHealth;
 	StartLocation = GetActorLocation();
+
+	UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance());
+	if (GI) ShootInterval = GI->SelectedShootInterval;
+
+	UE_LOG(LogTemp, Warning, TEXT("Selected Shoot Interval: %f"), GI->SelectedShootInterval);
 
 	GetWorldTimerManager().SetTimer(
 		ShootTimerHandle,

@@ -2,6 +2,7 @@
 
 
 #include "EnemySpawner.h"
+#include "MyGameInstance.h"
 
 // Sets default values
 AEnemySpawner::AEnemySpawner()
@@ -15,6 +16,12 @@ AEnemySpawner::AEnemySpawner()
 void AEnemySpawner::BeginPlay()
 {
 	Super::BeginPlay();
+
+	UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance());
+	if (GI) CurrentDifficulty = GI->SelectedDifficulty;
+
+	UE_LOG(LogTemp, Warning, TEXT("Selected Difficulty: %d"), GI->SelectedDifficulty);
+
 	SpawnAllEnemies(CurrentDifficulty);
 	
 }
@@ -65,5 +72,11 @@ void AEnemySpawner::SpawnAllEnemies(int32 Difficulty)
 			UE_LOG(LogTemp, Log, TEXT("Spawned enemy at %s"), *Location.ToString());
 		}
 	}
+}
+
+
+void AEnemySpawner::SetCurrentDifficulty(int NewValue)
+{
+	CurrentDifficulty = NewValue;
 }
 

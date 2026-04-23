@@ -31,7 +31,7 @@ public:
 	
 	float RisePerShot = 0.05f;
 	float Heat = 0.0f;
-	float DecayRate = 5.5f;
+	float DecayRate = 6.0f;
 	float HalfAngle = FMath::DegreesToRadians(0.5f);
 
 	void SetAmmo(int NewAmmo);

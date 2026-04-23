@@ -26,6 +26,9 @@ public:
 	int32 MediumDifficulty = 2;
 	int32 HardDifficulty = 3;
 
+	UFUNCTION(BlueprintCallable, Category = "Spawning")
+	void SetCurrentDifficulty(int NewValue);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

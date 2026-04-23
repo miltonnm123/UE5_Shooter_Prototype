@@ -105,7 +105,7 @@ void AMyCharacter::PlayerShoot()
 
 		GetWorld()->LineTraceSingleByChannel(HitResult, start, end, ECC_Visibility);
 
-		DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 10.0f);
+		DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 1.0f);
 
 		if (HitResult.bBlockingHit)
 		{
