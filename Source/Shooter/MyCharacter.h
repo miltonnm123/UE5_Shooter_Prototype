@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Camera/CameraComponent.h"
 #include "Sound/SoundBase.h"
+#include "DamageFlashWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "MyCharacter.generated.h"
 
@@ -54,6 +55,12 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	float TakeDamage(
+		float DamageAmount,
+		FDamageEvent const& DamageEvent,
+		AController* EventInstigator,
+		AActor* DamageCauser);
 
 public:	
 	// Called every frame

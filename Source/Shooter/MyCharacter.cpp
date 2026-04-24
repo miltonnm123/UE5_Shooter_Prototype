@@ -3,6 +3,8 @@
 
 #include "MyCharacter.h"
 #include "MyEnemy.h"
+#include "MyPlayerController.h"
+#include "MyGameMode.h"
 #include "DrawDebugHelpers.h"
 
 
@@ -23,9 +25,6 @@ AMyCharacter::AMyCharacter()
 
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
 	WeaponMesh->SetupAttachment(Camera);
-
-	//GetCharacterMovement()->bOrientRotationToMovement = false;
-
 }
 
 // Called when the game starts or when spawned
@@ -115,7 +114,13 @@ void AMyCharacter::PlayerShoot()
 
 			if (Enemy)
 			{
-				Enemy->TakeDamageFromPlayer(50.0f);
+				UGameplayStatics::ApplyDamage(
+					Enemy,
+					50.0f,
+					GetController(),
+					this,
+					nullptr
+				);
 			}
 		}
 
@@ -147,5 +152,28 @@ void AMyCharacter::PlayReloadAnimation()
 		float Duration = AnimInstance->Montage_Play(ReloadMontage, 1.0f);
 		UE_LOG(LogTemp, Warning, TEXT("Montage_Play returned: %f"), Duration);
 	}
+}
+
+float AMyCharacter::TakeDamage(
+	float DamageAmount,
+	FDamageEvent const& DamageEvent,
+	AController* EventInstigator,
+	AActor* DamageCauser)
+{
+	CurrentHealth -= DamageAmount;
+
+	AMyPlayerController* PC = Cast<AMyPlayerController>(GetController());
+	if (PC)
+	{
+		PC->ShowDamageFlash();
+	}
+
+	if (CurrentHealth <= 0)
+	{
+		AMyGameMode* GM = Cast<AMyGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+		if (GM) GM->ResetAll();
+	}
+
+	return DamageAmount;
 }
 

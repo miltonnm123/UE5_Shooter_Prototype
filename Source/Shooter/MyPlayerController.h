@@ -9,6 +9,7 @@
 #include "InputAction.h"
 #include "InputMappingContext.h"
 #include "InputActionValue.h"
+#include "DamageFlashWidget.h"
 #include "MyPlayerController.generated.h"
 
 /**
@@ -19,6 +20,8 @@ class SHOOTER_API AMyPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
+public:
+	void ShowDamageFlash();
 
 protected:
 	// Called when the game starts or when spawned
@@ -30,6 +33,13 @@ protected:
 	void Shoot();
 	void Reload();
 	void FinishReload();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<UDamageFlashWidget> DamageFlashClass;
+
+	UPROPERTY()
+	UDamageFlashWidget* DamageFlashWidget;
+
 
 private:
 	UPROPERTY(EditAnywhere)
@@ -49,7 +59,6 @@ private:
 
 	FTimerHandle ReloadTimerHandle;
 	bool IsReloading = false;
-	
 
 
 };

@@ -18,6 +18,15 @@ void AMyPlayerController::BeginPlay()
 		Subsystem->AddMappingContext(MappingContext, 0);
 	}
 
+	if (DamageFlashClass)
+	{
+		DamageFlashWidget = CreateWidget<UDamageFlashWidget>(this, DamageFlashClass);
+
+		if (DamageFlashWidget)
+		{
+			DamageFlashWidget->AddToViewport(10);
+		}
+	}
 }
 
 void AMyPlayerController::SetupInputComponent()
@@ -101,5 +110,13 @@ void AMyPlayerController::FinishReload()
 		IsReloading = false;
 		UE_LOG(LogTemp, Warning, TEXT("Reload complete"));
 	}
+}
+
+void AMyPlayerController::ShowDamageFlash()
+{
+	UE_LOG(LogTemp, Warning, TEXT("DamageFlashWidget: %s"),
+		DamageFlashWidget ? TEXT("valid") : TEXT("null"));
+
+	if (DamageFlashWidget) DamageFlashWidget->PlayFlash();
 }
 

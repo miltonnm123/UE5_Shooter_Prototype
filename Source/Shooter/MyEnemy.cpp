@@ -5,6 +5,7 @@
 #include "MyGameInstance.h"
 #include "MyCharacter.h"
 #include "MyGameMode.h"
+#include "DamageFlashWidget.h"
 #include "GameFramework/Character.h"
 
 
@@ -61,42 +62,36 @@ void AMyEnemy::ShootAtPlayer()
 	if (!HasLineOfSightToPlayer()) return;
 
 	ACharacter* Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	
 	if (!Player) return;
 
 	float Distance = FVector::Dist(GetActorLocation(), Player->GetActorLocation());
 	if (Distance > ShootRange) return;
 
-	AMyCharacter* MyPlayer = Cast<AMyCharacter>(Player);
-	if (MyPlayer)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("%s shot at the player"), *GetName());
-		MyPlayer->CurrentHealth -= DamageAmount;
+	UE_LOG(LogTemp, Warning, TEXT("%s shot at the player"), *GetName());
 
-		if (MyPlayer->CurrentHealth <= 0)
-		{
-			UE_LOG(LogTemp, Log, TEXT("player died!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"));
-			AMyGameMode* GameMode = Cast<AMyGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-			if (GameMode)
-			{
-				GameMode->ResetAll();
-			}
-		}
-	}
+	UGameplayStatics::ApplyDamage(
+		Player,
+		IncomingDamage,
+		GetController(),
+		this,
+		nullptr
+	);
 }
 
-void AMyEnemy::TakeDamageFromPlayer(float dmg)
+float AMyEnemy::TakeDamage(
+	float DamageAmount,
+	FDamageEvent const& DamageEvent,
+	AController* EventInstigator,
+	AActor* DamageCauser)
 {
-	if (CurrentHealth <= 0.f) return;
-
-	CurrentHealth -= dmg;
-	UE_LOG(LogTemp, Warning, TEXT("%s hit! Health: %.1f / %.1f"),
-		*GetName(), CurrentHealth, MaxHealth);
+	CurrentHealth -= DamageAmount;
 
 	if (CurrentHealth <= 0.f)
 	{
 		Die();
 	}
+
+	return DamageAmount;
 }
 
 void AMyEnemy::Die()
