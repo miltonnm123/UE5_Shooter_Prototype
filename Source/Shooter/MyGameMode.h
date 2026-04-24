@@ -15,10 +15,18 @@ class SHOOTER_API AMyGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	UFUNCTION()
+	AMyGameMode();
 
 	void ResetEnemies();
 	void ResetPlayer();
 	void ResetAll();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<AActor*> Enemies;
+
+protected:
+
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 	
 };

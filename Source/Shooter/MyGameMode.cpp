@@ -1,11 +1,40 @@
 #include "MyGameMode.h"
 #include "MyCharacter.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/PlayerStart.h"
 
+AMyGameMode::AMyGameMode()
+{
+	PrimaryActorTick.bCanEverTick = true; // GameMode tick is OFF by default
+}
+
+void AMyGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+
+
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMyEnemy::StaticClass(), Enemies);
+}
+
+void AMyGameMode::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	FVector MyCharacterPosition = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
+
+	for (AActor* Actor : Enemies)
+	{
+		AMyEnemy* Enemy = Cast<AMyEnemy>(Actor);
+		if (Enemy)
+		{
+			FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(Enemy->GetActorLocation(), MyCharacterPosition);
+			Enemy->SetActorRotation(LookAtRotation);
+		}
+	}
+}
 
 void AMyGameMode::ResetEnemies()
 {
-	TArray<AActor*> Enemies;
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMyEnemy::StaticClass(), Enemies);
 
