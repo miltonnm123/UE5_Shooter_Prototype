@@ -13,7 +13,8 @@ void AMyGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance());
+
+	GI = Cast<UMyGameInstance>(GetGameInstance());
 	if (GI) CurrentDifficulty = GI->SelectedDifficulty;
 
 	UE_LOG(LogTemp, Warning, TEXT("Selected Difficulty: %d"), GI->SelectedDifficulty);
@@ -22,11 +23,18 @@ void AMyGameMode::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("ENEMIES SUCCESSFULLY SPAWNED"));
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMyEnemy::StaticClass(), Enemies);
+
+	GI->CurrentRunTime = 0;
+	GameIsRunning = true;
 }
 
 void AMyGameMode::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+
+	if (GameIsRunning) if (GI) GI->CurrentRunTime += DeltaTime;
+	
 
 	FVector MyCharacterPosition = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
 
@@ -77,6 +85,13 @@ void AMyGameMode::ResetPlayer()
 
 void AMyGameMode::ResetAll()
 {
+	GameIsRunning = false;
+
+	if (GI->CurrentRunTime < GI->BestRunTime)
+	{
+		GI->BestRunTime = GI->CurrentRunTime;
+	}
+
 	GoToMainMenuLevel();
 }
 
@@ -133,6 +148,7 @@ void AMyGameMode::SpawnAllEnemies(int32 Difficulty)
 		if (SpawnedEnemy)
 		{
 			UE_LOG(LogTemp, Log, TEXT("Spawned enemy at %s"), *Location.ToString());
+			Enemies.Add(SpawnedEnemy);
 		}
 	}
 }

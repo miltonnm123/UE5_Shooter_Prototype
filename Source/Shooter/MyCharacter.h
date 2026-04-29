@@ -30,7 +30,7 @@ public:
 
 	float WeaponRange = 10000.0f;
 	
-	float RisePerShot = 0.05f;
+	float RisePerShot = 0.04f;
 	float Heat = 0.0f;
 	float DecayRate = 6.0f;
 	float HalfAngle = FMath::DegreesToRadians(0.5f);

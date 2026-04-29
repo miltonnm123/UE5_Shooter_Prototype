@@ -5,6 +5,7 @@
 #include "MyEnemy.h"
 #include "MyPlayerController.h"
 #include "MyGameMode.h"
+#include "MyGameInstance.h"
 #include "DrawDebugHelpers.h"
 
 
@@ -171,7 +172,11 @@ float AMyCharacter::TakeDamage(
 	if (CurrentHealth <= 0)
 	{
 		AMyGameMode* GM = Cast<AMyGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-		if (GM) GM->ResetAll();
+		UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance());
+		GM->GameIsRunning = false;
+		GI->CurrentRunTime = 0;
+		GM->GoToMainMenuLevel();
+		//if (GM) GM->ResetAll();
 	}
 
 	return DamageAmount;

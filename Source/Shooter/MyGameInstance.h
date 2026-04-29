@@ -26,6 +26,6 @@ public:
 	float CurrentRunTime = 0.0f;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Data")
-	float BestRunTime = 0.0f;
+	float BestRunTime = 99999.0f;
 	
 };

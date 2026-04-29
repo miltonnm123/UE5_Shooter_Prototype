@@ -7,9 +7,8 @@
 #include "MyEnemy.h"
 #include "MyGameMode.generated.h"
 
-/**
- * 
- */
+class UMyGameInstance;
+
 UCLASS()
 class SHOOTER_API AMyGameMode : public AGameModeBase
 {
@@ -21,6 +20,7 @@ public:
 	void ResetEnemies();
 	void ResetPlayer();
 	void ResetAll();
+	void GoToMainMenuLevel();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	int32 SpawnCount = 3;
@@ -34,6 +34,8 @@ public:
 	int32 EasyDifficulty = 1;
 	int32 MediumDifficulty = 2;
 	int32 HardDifficulty = 3;
+
+	bool GameIsRunning = true;
 
 	UFUNCTION(BlueprintCallable, Category = "Spawning")
 	void SetCurrentDifficulty(int NewValue);
@@ -49,8 +51,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	TSubclassOf<AActor> EnemyClass;
 
+	UMyGameInstance* GI;
+
+
 	UFUNCTION(BlueprintCallable, Category = "Spawning")
 	void SpawnAllEnemies(int32 Difficulty);
 
-	void GoToMainMenuLevel();
+	
 };
