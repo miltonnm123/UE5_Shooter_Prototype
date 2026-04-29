@@ -4,6 +4,8 @@
 #include "GameFramework/Character.h"
 #include "MyEnemy.generated.h"
 
+class AMyGameMode;
+
 UCLASS()
 class SHOOTER_API AMyEnemy : public ACharacter
 {
@@ -47,6 +49,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	AMyGameMode* GM;
 
 private:
 	void Die();

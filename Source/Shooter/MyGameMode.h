@@ -26,6 +26,9 @@ public:
 	int32 SpawnCount = 3;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	int32 EnemiesLeft = SpawnCount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	int32 CurrentDifficulty = 2;
 
 	int32 EasyDifficulty = 1;
@@ -46,9 +49,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	TSubclassOf<AActor> EnemyClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
-	TArray<AActor*> SpawnPoints;
-
 	UFUNCTION(BlueprintCallable, Category = "Spawning")
 	void SpawnAllEnemies(int32 Difficulty);
+
+	void GoToMainMenuLevel();
 };

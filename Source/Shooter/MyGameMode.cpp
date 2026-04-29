@@ -19,7 +19,7 @@ void AMyGameMode::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("Selected Difficulty: %d"), GI->SelectedDifficulty);
 
 	SpawnAllEnemies(CurrentDifficulty);
-
+	UE_LOG(LogTemp, Warning, TEXT("ENEMIES SUCCESSFULLY SPAWNED"));
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMyEnemy::StaticClass(), Enemies);
 }
@@ -77,12 +77,18 @@ void AMyGameMode::ResetPlayer()
 
 void AMyGameMode::ResetAll()
 {
-	ResetPlayer();
-	ResetEnemies();
+	GoToMainMenuLevel();
 }
 
 void AMyGameMode::SpawnAllEnemies(int32 Difficulty)
 {
+	TArray<AActor*> SpawnPoints;
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("SpawnPoint"), SpawnPoints);
+
+	UE_LOG(LogTemp, Warning, TEXT("SpawnPoints found: %d"), SpawnPoints.Num());
+	UE_LOG(LogTemp, Warning, TEXT("EnemyClass set: %s"), EnemyClass ? TEXT("YES") : TEXT("NO"));
+	UE_LOG(LogTemp, Warning, TEXT("SpawnCount: %d"), SpawnCount);
+
 	if (!EnemyClass)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("EnemySpawner: No EnemyClass set"));
@@ -111,6 +117,8 @@ void AMyGameMode::SpawnAllEnemies(int32 Difficulty)
 
 	int32 ActualSpawnCount = FMath::Min(SpawnCount, AvailablePoints.Num());
 
+	EnemiesLeft = ActualSpawnCount;
+
 	for (int32 i = 0; i < ActualSpawnCount; i++)
 	{
 		AActor* SpawnPoint = AvailablePoints[i];
@@ -132,5 +140,10 @@ void AMyGameMode::SpawnAllEnemies(int32 Difficulty)
 void AMyGameMode::SetCurrentDifficulty(int NewValue)
 {
 	CurrentDifficulty = NewValue;
+}
+
+void AMyGameMode::GoToMainMenuLevel()
+{
+	UGameplayStatics::OpenLevel(GetWorld(), FName("MainMenuLevel"));
 }
 

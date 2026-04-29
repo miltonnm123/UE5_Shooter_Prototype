@@ -21,5 +21,11 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Settings")
 	float SelectedShootInterval = 2.0f;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Data")
+	float CurrentRunTime = 0.0f;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Data")
+	float BestRunTime = 0.0f;
 	
 };

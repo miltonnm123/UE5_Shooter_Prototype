@@ -28,6 +28,8 @@ void AMyEnemy::BeginPlay()
 	UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance());
 	if (GI) ShootInterval = GI->SelectedShootInterval;
 
+	GM = Cast<AMyGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+
 	UE_LOG(LogTemp, Warning, TEXT("Selected Shoot Interval: %f"), GI->SelectedShootInterval);
 
 	GetWorldTimerManager().SetTimer(
@@ -97,9 +99,24 @@ float AMyEnemy::TakeDamage(
 void AMyEnemy::Die()
 {
 	UE_LOG(LogTemp, Warning, TEXT("%s has died!"), *GetName());
+
+	if ( !GM ) GM = Cast<AMyGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+
+	if (GM)
+	{
+		GM->EnemiesLeft--;
+		UE_LOG(LogTemp, Warning, TEXT("Enemies left: %d"), GM->EnemiesLeft);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("GM was null, skipping"));
+	}
+
 	SetActorHiddenInGame(true);
 	SetActorEnableCollision(false);
 	GetWorldTimerManager().ClearTimer(ShootTimerHandle);
+
+	if (GM->EnemiesLeft <= 0) GM->ResetAll();
 }
 
 void AMyEnemy::ResetEnemy()
